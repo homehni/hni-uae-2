@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useLocation as useWouterLocation } from "wouter";
-import heroImage from "@assets/generated_images/Dubai_skyline_sunset_panorama_a90512e7.png";
+const heroImage = "/hero-image.png";
 import { AnimatedText } from "@/components/reactbits/AnimatedText";
 import { FloatingLines } from "@/components/reactbits/FloatingLines";
 import { FlowingMenu } from "@/components/reactbits/FlowingMenu";
