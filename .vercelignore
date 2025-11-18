@@ -1,0 +1,9 @@
+node_modules
+.local
+attached_assets
+server
+shared
+*.md
+.replit
+.jsrepo.json
+
