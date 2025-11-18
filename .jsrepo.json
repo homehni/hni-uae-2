@@ -1,0 +1,7 @@
+{
+  "source": "https://reactbits.dev/tailwind/",
+  "path": "./client/src/components/reactbits",
+  "formatter": "prettier"
+}
+
+
