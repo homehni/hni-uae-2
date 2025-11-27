@@ -10,6 +10,10 @@ import PropertyDetail from "@/pages/PropertyDetail";
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
 import DashboardPage from "@/pages/DashboardPage";
+import LeadsPage from "@/pages/LeadsPage";
+import WalletPage from "@/pages/WalletPage";
+import MyPropertiesPage from "@/pages/MyPropertiesPage";
+import PropertyFormPage from "@/pages/PropertyFormPage";
 import NotFound from "@/pages/not-found";
 import { ChromaGrid } from "@/components/reactbits/ChromaGrid";
 
@@ -22,6 +26,11 @@ function Router() {
       <Route path="/login" component={LoginPage} />
       <Route path="/register" component={RegisterPage} />
       <Route path="/dashboard" component={DashboardPage} />
+      <Route path="/leads" component={LeadsPage} />
+      <Route path="/wallet" component={WalletPage} />
+      <Route path="/my-properties" component={MyPropertiesPage} />
+      <Route path="/properties/new" component={PropertyFormPage} />
+      <Route path="/properties/:id/edit" component={PropertyFormPage} />
       <Route component={NotFound} />
     </Switch>
   );
