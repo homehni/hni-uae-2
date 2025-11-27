@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Facebook, Twitter, Instagram, Linkedin, Mail } from "lucide-react";
+import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
 import { GlassIcons } from "@/components/reactbits/GlassIcons";
 import { FluidGlass } from "@/components/reactbits/FluidGlass";
 import { ChromaGrid } from "@/components/reactbits/ChromaGrid";
@@ -13,13 +13,24 @@ export function Footer() {
       <FluidGlass className="bg-card/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
           {/* About */}
-          <div>
-            <h3 className="font-semibold text-lg mb-4">About Bayut</h3>
+          <div className="lg:col-span-2">
+            <h3 className="font-bold text-xl mb-4 text-primary">HomeHNI</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              UAE's leading property portal connecting buyers, sellers, and renters with verified listings and trusted agents.
+              UAE's trusted real estate platform connecting buyers, sellers, and renters with 
+              verified listings and professional agents. Find your dream home with HomeHNI.
             </p>
+            <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Phone className="h-4 w-4" />
+                <span>+971 4 123 4567</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+              <Mail className="h-4 w-4" />
+              <span>info@homehni.ae</span>
+            </div>
             <GlassIcons
               icons={[
                 { icon: <Facebook className="h-5 w-5" />, href: "#", label: "Facebook" },
@@ -62,38 +73,59 @@ export function Footer() {
                   </span>
                 </Link>
               </li>
+              <li>
+                <Link href="/properties?completionStatus=Off-Plan">
+                  <span className="text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-md -ml-2 cursor-pointer inline-block">
+                    New Projects
+                  </span>
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* Property Types */}
+          {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-lg mb-4">Property Types</h3>
+            <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/properties?propertyType=Apartment">
-                  <span className="text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-md -ml-2 cursor-pointer inline-block" data-testid="link-footer-apartments">
-                    Apartments
+                <Link href="/agents">
+                  <span className="text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-md -ml-2 cursor-pointer inline-block">
+                    Find Agents
                   </span>
                 </Link>
               </li>
               <li>
-                <Link href="/properties?propertyType=Villa">
-                  <span className="text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-md -ml-2 cursor-pointer inline-block" data-testid="link-footer-villas">
-                    Villas
+                <Link href="/area-guides">
+                  <span className="text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-md -ml-2 cursor-pointer inline-block">
+                    Area Guides
                   </span>
                 </Link>
               </li>
               <li>
-                <Link href="/properties?propertyType=Townhouse">
-                  <span className="text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-md -ml-2 cursor-pointer inline-block" data-testid="link-footer-townhouses">
-                    Townhouses
+                <Link href="/mortgage-calculator">
+                  <span className="text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-md -ml-2 cursor-pointer inline-block">
+                    Mortgage Calculator
                   </span>
                 </Link>
               </li>
               <li>
-                <Link href="/properties?propertyType=Penthouse">
-                  <span className="text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-md -ml-2 cursor-pointer inline-block" data-testid="link-footer-penthouses">
-                    Penthouses
+                <Link href="/services">
+                  <span className="text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-md -ml-2 cursor-pointer inline-block">
+                    Home Services
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/about">
+                  <span className="text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-md -ml-2 cursor-pointer inline-block">
+                    About Us
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact">
+                  <span className="text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-md -ml-2 cursor-pointer inline-block">
+                    Contact Us
                   </span>
                 </Link>
               </li>
@@ -104,7 +136,7 @@ export function Footer() {
           <div>
             <h3 className="font-semibold text-lg mb-4">Stay Updated</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Get the latest property listings and market insights.
+              Get the latest property listings and market insights delivered to your inbox.
             </p>
             <div className="flex gap-2">
               <Input placeholder="Your email" type="email" data-testid="input-newsletter" />
@@ -112,24 +144,33 @@ export function Footer() {
                 <Mail className="h-4 w-4" />
               </Button>
             </div>
+            <p className="text-xs text-muted-foreground mt-3">
+              By subscribing, you agree to our Privacy Policy
+            </p>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
           <div>
-            © 2024 Bayut UAE. All rights reserved.
+            © 2024 HomeHNI. All rights reserved.
           </div>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-foreground" data-testid="link-privacy">
-              Privacy Policy
-            </a>
-            <a href="#" className="hover:text-foreground" data-testid="link-terms">
-              Terms of Use
-            </a>
-            <a href="#" className="hover:text-foreground" data-testid="link-contact">
-              Contact Us
-            </a>
+            <Link href="/privacy">
+              <span className="hover:text-foreground cursor-pointer" data-testid="link-privacy">
+                Privacy Policy
+              </span>
+            </Link>
+            <Link href="/terms">
+              <span className="hover:text-foreground cursor-pointer" data-testid="link-terms">
+                Terms of Use
+              </span>
+            </Link>
+            <Link href="/contact">
+              <span className="hover:text-foreground cursor-pointer" data-testid="link-contact">
+                Contact Us
+              </span>
+            </Link>
           </div>
         </div>
         </div>

@@ -14,6 +14,15 @@ import LeadsPage from "@/pages/LeadsPage";
 import WalletPage from "@/pages/WalletPage";
 import MyPropertiesPage from "@/pages/MyPropertiesPage";
 import PropertyFormPage from "@/pages/PropertyFormPage";
+import AgentsPage from "@/pages/AgentsPage";
+import AgentProfilePage from "@/pages/AgentProfilePage";
+import AboutPage from "@/pages/AboutPage";
+import ContactPage from "@/pages/ContactPage";
+import MortgageCalculatorPage from "@/pages/MortgageCalculatorPage";
+import AreaGuidesPage from "@/pages/AreaGuidesPage";
+import ServicesPage from "@/pages/ServicesPage";
+import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
+import TermsOfServicePage from "@/pages/TermsOfServicePage";
 import NotFound from "@/pages/not-found";
 import { ChromaGrid } from "@/components/reactbits/ChromaGrid";
 
@@ -23,6 +32,15 @@ function Router() {
       <Route path="/" component={HomePage} />
       <Route path="/properties" component={PropertyListings} />
       <Route path="/property/:id" component={PropertyDetail} />
+      <Route path="/agents" component={AgentsPage} />
+      <Route path="/agent/:id" component={AgentProfilePage} />
+      <Route path="/about" component={AboutPage} />
+      <Route path="/contact" component={ContactPage} />
+      <Route path="/mortgage-calculator" component={MortgageCalculatorPage} />
+      <Route path="/area-guides" component={AreaGuidesPage} />
+      <Route path="/services" component={ServicesPage} />
+      <Route path="/privacy" component={PrivacyPolicyPage} />
+      <Route path="/terms" component={TermsOfServicePage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/register" component={RegisterPage} />
       <Route path="/dashboard" component={DashboardPage} />
