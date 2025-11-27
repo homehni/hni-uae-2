@@ -7,6 +7,14 @@
   "functions": {},
   "rewrites": [
     {
+      "source": "/homehni",
+      "destination": "/homehni/index.html"
+    },
+    {
+      "source": "/homehni/(.*)",
+      "destination": "/homehni/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

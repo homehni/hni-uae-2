@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomeHNI - Find Properties for Sale and Rent in UAE</title>
+    <meta name="description" content="HomeHNI is UAE's trusted real estate platform. Search properties for sale and rent in Dubai, Abu Dhabi, and across Emirates with verified listings and professional agents.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header with Logo and Navigation -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo -->
+            <a href="/" class="logo">
+                <img src="assets/logo.png" alt="HomeHNI Logo" class="logo-img">
+                <span class="logo-text">HomeHNI</span>
+            </a>
+
+            <!-- Main Navigation -->
+            <nav class="main-nav">
+                <a href="#" class="nav-link">Buy</a>
+                <a href="#" class="nav-link">Rent</a>
+                <a href="#" class="nav-link">Commercial</a>
+                <a href="#" class="nav-link">New Projects</a>
+                <a href="#" class="nav-link">Find Agents</a>
+            </nav>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <a href="#" class="btn btn-ghost">Login</a>
+                <a href="#" class="btn btn-primary">List Property</a>
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                    <span class="hamburger"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section with Search -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Find Your Dream Home in UAE</h1>
+            <p class="hero-subtitle">Search from thousands of properties across Dubai, Abu Dhabi, and all Emirates</p>
+            
+            <!-- Search Area -->
+            <div class="search-container">
+                <!-- Search Tabs -->
+                <div class="search-tabs">
+                    <button class="search-tab active">Buy</button>
+                    <button class="search-tab">Rent</button>
+                    <button class="search-tab">Commercial</button>
+                </div>
+                
+                <!-- Search Form -->
+                <form class="search-form">
+                    <div class="search-row">
+                        <div class="search-field search-field-location">
+                            <label class="search-label">Location</label>
+                            <input type="text" class="search-input" placeholder="Enter location, community, or building">
+                        </div>
+                        <div class="search-field search-field-type">
+                            <label class="search-label">Property Type</label>
+                            <select class="search-select">
+                                <option value="">All Types</option>
+                                <option value="apartment">Apartment</option>
+                                <option value="villa">Villa</option>
+                                <option value="townhouse">Townhouse</option>
+                                <option value="penthouse">Penthouse</option>
+                                <option value="compound">Compound</option>
+                            </select>
+                        </div>
+                        <div class="search-field search-field-price">
+                            <label class="search-label">Price Range</label>
+                            <select class="search-select">
+                                <option value="">Any Price</option>
+                                <option value="0-500000">Up to AED 500K</option>
+                                <option value="500000-1000000">AED 500K - 1M</option>
+                                <option value="1000000-2000000">AED 1M - 2M</option>
+                                <option value="2000000-5000000">AED 2M - 5M</option>
+                                <option value="5000000+">AED 5M+</option>
+                            </select>
+                        </div>
+                        <div class="search-field search-field-beds">
+                            <label class="search-label">Beds</label>
+                            <select class="search-select">
+                                <option value="">Any</option>
+                                <option value="studio">Studio</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4+</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="search-btn">
+                            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Links / Categories -->
+    <section class="quick-links">
+        <div class="container">
+            <div class="quick-links-grid">
+                <a href="#" class="quick-link-card">
+                    <div class="quick-link-icon">🏠</div>
+                    <span class="quick-link-text">Apartments for Sale</span>
+                </a>
+                <a href="#" class="quick-link-card">
+                    <div class="quick-link-icon">🏡</div>
+                    <span class="quick-link-text">Villas for Sale</span>
+                </a>
+                <a href="#" class="quick-link-card">
+                    <div class="quick-link-icon">🏢</div>
+                    <span class="quick-link-text">Apartments for Rent</span>
+                </a>
+                <a href="#" class="quick-link-card">
+                    <div class="quick-link-icon">🏘️</div>
+                    <span class="quick-link-text">Villas for Rent</span>
+                </a>
+                <a href="#" class="quick-link-card">
+                    <div class="quick-link-icon">🏗️</div>
+                    <span class="quick-link-text">New Projects</span>
+                </a>
+                <a href="#" class="quick-link-card">
+                    <div class="quick-link-icon">🏬</div>
+                    <span class="quick-link-text">Commercial</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Listings Section -->
+    <section class="featured-listings">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured Properties</h2>
+                <a href="#" class="view-all-link">View All →</a>
+            </div>
+            
+            <div class="listings-grid">
+                <!-- Property Card 1 -->
+                <article class="property-card">
+                    <div class="property-image">
+                        <img src="assets/property-1.png" alt="Luxury Apartment in Downtown Dubai" loading="lazy">
+                        <span class="property-badge badge-featured">Featured</span>
+                        <button class="property-favorite" aria-label="Add to favorites">♡</button>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">AED 2,500,000</div>
+                        <h3 class="property-title">Luxury 2BR Apartment with Burj Khalifa View</h3>
+                        <p class="property-location">Downtown Dubai, Dubai</p>
+                        <div class="property-features">
+                            <span class="property-feature">🛏️ 2 Beds</span>
+                            <span class="property-feature">🛁 3 Baths</span>
+                            <span class="property-feature">📐 1,650 sqft</span>
+                        </div>
+                        <div class="property-meta">
+                            <span class="property-agent">Listed by Premium Realty</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Property Card 2 -->
+                <article class="property-card">
+                    <div class="property-image">
+                        <img src="assets/property-2.png" alt="Modern Villa in Palm Jumeirah" loading="lazy">
+                        <span class="property-badge badge-premium">Premium</span>
+                        <button class="property-favorite" aria-label="Add to favorites">♡</button>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">AED 15,000,000</div>
+                        <h3 class="property-title">Beachfront Villa with Private Pool</h3>
+                        <p class="property-location">Palm Jumeirah, Dubai</p>
+                        <div class="property-features">
+                            <span class="property-feature">🛏️ 5 Beds</span>
+                            <span class="property-feature">🛁 6 Baths</span>
+                            <span class="property-feature">📐 8,500 sqft</span>
+                        </div>
+                        <div class="property-meta">
+                            <span class="property-agent">Listed by Elite Properties</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Property Card 3 -->
+                <article class="property-card">
+                    <div class="property-image">
+                        <img src="assets/property-3.png" alt="Studio Apartment in Business Bay" loading="lazy">
+                        <span class="property-badge badge-new">New</span>
+                        <button class="property-favorite" aria-label="Add to favorites">♡</button>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">AED 85,000/year</div>
+                        <h3 class="property-title">Modern Studio with Canal View</h3>
+                        <p class="property-location">Business Bay, Dubai</p>
+                        <div class="property-features">
+                            <span class="property-feature">🛏️ Studio</span>
+                            <span class="property-feature">🛁 1 Bath</span>
+                            <span class="property-feature">📐 450 sqft</span>
+                        </div>
+                        <div class="property-meta">
+                            <span class="property-agent">Listed by Dubai Homes</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Property Card 4 -->
+                <article class="property-card">
+                    <div class="property-image">
+                        <img src="assets/property-4.png" alt="Townhouse in Arabian Ranches" loading="lazy">
+                        <button class="property-favorite" aria-label="Add to favorites">♡</button>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">AED 4,200,000</div>
+                        <h3 class="property-title">Spacious 4BR Townhouse with Garden</h3>
+                        <p class="property-location">Arabian Ranches, Dubai</p>
+                        <div class="property-features">
+                            <span class="property-feature">🛏️ 4 Beds</span>
+                            <span class="property-feature">🛁 4 Baths</span>
+                            <span class="property-feature">📐 3,200 sqft</span>
+                        </div>
+                        <div class="property-meta">
+                            <span class="property-agent">Listed by Emaar Properties</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Property Card 5 -->
+                <article class="property-card">
+                    <div class="property-image">
+                        <img src="assets/property-5.png" alt="Penthouse in Dubai Marina" loading="lazy">
+                        <span class="property-badge badge-featured">Featured</span>
+                        <button class="property-favorite" aria-label="Add to favorites">♡</button>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">AED 12,500,000</div>
+                        <h3 class="property-title">Stunning Penthouse with Marina Views</h3>
+                        <p class="property-location">Dubai Marina, Dubai</p>
+                        <div class="property-features">
+                            <span class="property-feature">🛏️ 4 Beds</span>
+                            <span class="property-feature">🛁 5 Baths</span>
+                            <span class="property-feature">📐 5,800 sqft</span>
+                        </div>
+                        <div class="property-meta">
+                            <span class="property-agent">Listed by Marina Realty</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Property Card 6 -->
+                <article class="property-card">
+                    <div class="property-image">
+                        <img src="assets/property-6.png" alt="Apartment in Abu Dhabi" loading="lazy">
+                        <span class="property-badge badge-new">New</span>
+                        <button class="property-favorite" aria-label="Add to favorites">♡</button>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">AED 1,800,000</div>
+                        <h3 class="property-title">Elegant 3BR with Corniche View</h3>
+                        <p class="property-location">Al Reem Island, Abu Dhabi</p>
+                        <div class="property-features">
+                            <span class="property-feature">🛏️ 3 Beds</span>
+                            <span class="property-feature">🛁 3 Baths</span>
+                            <span class="property-feature">📐 2,100 sqft</span>
+                        </div>
+                        <div class="property-meta">
+                            <span class="property-agent">Listed by Abu Dhabi Realty</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Areas Section -->
+    <section class="popular-areas">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Popular Areas</h2>
+                <a href="#" class="view-all-link">Explore All →</a>
+            </div>
+            
+            <div class="areas-grid">
+                <a href="#" class="area-card area-card-large">
+                    <div class="area-overlay"></div>
+                    <div class="area-content">
+                        <h3 class="area-name">Downtown Dubai</h3>
+                        <span class="area-count">2,500+ Properties</span>
+                    </div>
+                </a>
+                <a href="#" class="area-card">
+                    <div class="area-overlay"></div>
+                    <div class="area-content">
+                        <h3 class="area-name">Palm Jumeirah</h3>
+                        <span class="area-count">1,800+ Properties</span>
+                    </div>
+                </a>
+                <a href="#" class="area-card">
+                    <div class="area-overlay"></div>
+                    <div class="area-content">
+                        <h3 class="area-name">Dubai Marina</h3>
+                        <span class="area-count">3,200+ Properties</span>
+                    </div>
+                </a>
+                <a href="#" class="area-card">
+                    <div class="area-overlay"></div>
+                    <div class="area-content">
+                        <h3 class="area-name">JBR</h3>
+                        <span class="area-count">1,500+ Properties</span>
+                    </div>
+                </a>
+                <a href="#" class="area-card">
+                    <div class="area-overlay"></div>
+                    <div class="area-content">
+                        <h3 class="area-name">Business Bay</h3>
+                        <span class="area-count">2,100+ Properties</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why HomeHNI Section -->
+    <section class="why-us">
+        <div class="container">
+            <h2 class="section-title section-title-centered">Why Choose HomeHNI?</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">✓</div>
+                    <h3 class="feature-title">Verified Listings</h3>
+                    <p class="feature-text">All properties are verified by our team to ensure accuracy and authenticity.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3 class="feature-title">Trusted Agents</h3>
+                    <p class="feature-text">Work with certified and experienced real estate professionals.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Market Insights</h3>
+                    <p class="feature-text">Access real-time market data and trends to make informed decisions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3 class="feature-title">Secure Transactions</h3>
+                    <p class="feature-text">Safe and transparent property transactions with full legal support.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- Company Info -->
+                <div class="footer-section">
+                    <a href="/" class="footer-logo">
+                        <img src="assets/logo.png" alt="HomeHNI Logo">
+                        <span>HomeHNI</span>
+                    </a>
+                    <p class="footer-description">UAE's trusted real estate platform connecting buyers, sellers, and renters with their perfect properties.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Facebook">📘</a>
+                        <a href="#" class="social-link" aria-label="Twitter">🐦</a>
+                        <a href="#" class="social-link" aria-label="Instagram">📷</a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">💼</a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h4 class="footer-heading">Popular Searches</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Apartments for Sale in Dubai</a></li>
+                        <li><a href="#">Villas for Sale in Dubai</a></li>
+                        <li><a href="#">Apartments for Rent in Dubai</a></li>
+                        <li><a href="#">Properties in Abu Dhabi</a></li>
+                        <li><a href="#">Commercial Properties</a></li>
+                    </ul>
+                </div>
+
+                <!-- About -->
+                <div class="footer-section">
+                    <h4 class="footer-heading">About</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">About HomeHNI</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div class="footer-section">
+                    <h4 class="footer-heading">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Area Guides</a></li>
+                        <li><a href="#">Mortgage Calculator</a></li>
+                        <li><a href="#">Market Trends</a></li>
+                        <li><a href="#">Find an Agent</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal -->
+                <div class="footer-section">
+                    <h4 class="footer-heading">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Terms of Use</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">RERA Compliance</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p class="copyright">© 2024 HomeHNI. All rights reserved.</p>
+                <p class="footer-tagline">Making property search simple across UAE</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 
+    TODO: Design Choices for User Review
+    =====================================
+    1. Color Palette: Currently using default palette (Primary: #1E90FF, Accent: #FF7A59).
+       Modify CSS variables in styles.css to customize.
+    2. Logo: Using placeholder image. Replace with actual HomeHNI logo.
+    3. Hero Background: Using placeholder. Replace with high-quality UAE property image.
+    4. Property Images: All placeholders. Replace with actual property photos.
+    5. Content: All text is placeholder. Update with actual HomeHNI content.
+    6. Icons: Using emoji icons. Consider using proper icon library (Lucide, Font Awesome).
+    7. Navigation Links: All links are placeholder (#). Update with actual page URLs.
+    -->
+</body>
+</html>
