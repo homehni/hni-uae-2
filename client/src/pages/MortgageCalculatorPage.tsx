@@ -32,9 +32,10 @@ export default function MortgageCalculatorPage() {
     const numberOfPayments = loanTerm * 12;
 
     // Calculate monthly payment using the mortgage formula
+    const compoundFactor = Math.pow(1 + monthlyRate, numberOfPayments);
     const monthlyPayment =
-      (principal * (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments))) /
-      (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+      (principal * (monthlyRate * compoundFactor)) /
+      (compoundFactor - 1);
 
     const totalPayment = monthlyPayment * numberOfPayments;
     const totalInterest = totalPayment - principal;

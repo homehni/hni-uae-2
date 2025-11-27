@@ -35,7 +35,8 @@ export default function ContactPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
+    // TODO: Integrate with backend API for form submission
+    // For now, simulate form submission with a delay
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     toast({

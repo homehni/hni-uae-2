@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -176,13 +176,15 @@ export default function ServicesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("all");
 
-  const filteredServices = mockServices.filter((service) => {
-    const matchesCategory = selectedCategory === "all" || service.category === selectedCategory;
-    const matchesSearch = service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      service.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCity = selectedCity === "all" || service.serviceLocations?.includes(selectedCity);
-    return matchesCategory && matchesSearch && matchesCity;
-  });
+  const filteredServices = useMemo(() => {
+    return mockServices.filter((service) => {
+      const matchesCategory = selectedCategory === "all" || service.category === selectedCategory;
+      const matchesSearch = service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCity = selectedCity === "all" || service.serviceLocations?.includes(selectedCity);
+      return matchesCategory && matchesSearch && matchesCity;
+    });
+  }, [selectedCategory, searchQuery, selectedCity]);
 
   const getCategoryIcon = (categoryId: string) => {
     const cat = serviceCategories.find((c) => c.id === categoryId);

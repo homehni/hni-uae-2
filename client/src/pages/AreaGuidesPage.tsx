@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -136,7 +136,13 @@ const areaGuides: AreaGuide[] = [
 export default function AreaGuidesPage() {
   const [selectedCity, setSelectedCity] = useState("Dubai");
 
-  const currentCityData = areaGuides.find((g) => g.city === selectedCity);
+  const currentCityData = useMemo(() => {
+    return areaGuides.find((g) => g.city === selectedCity);
+  }, [selectedCity]);
+
+  const totalProperties = useMemo(() => {
+    return currentCityData?.areas.reduce((acc, a) => acc + a.propertyCount, 0).toLocaleString() || "0";
+  }, [currentCityData]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -266,7 +272,7 @@ export default function AreaGuidesPage() {
                     <div className="grid grid-cols-3 gap-4 mb-6">
                       <div className="text-center">
                         <div className="text-2xl font-bold text-primary">
-                          {currentCityData?.areas.reduce((acc, a) => acc + a.propertyCount, 0).toLocaleString()}+
+                          {totalProperties}+
                         </div>
                         <div className="text-sm text-muted-foreground">Properties</div>
                       </div>
