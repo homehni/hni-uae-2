@@ -142,8 +142,8 @@ async function takeScreenshot(browser, url, outputPath, options = {}) {
             timeout: options.timeout || CONFIG.timeout,
         });
         
-        // Wait for content to fully load
-        await page.waitForTimeout(2000);
+        // Wait for content to fully load (using setTimeout as waitForTimeout is deprecated)
+        await new Promise(resolve => setTimeout(resolve, 2000));
         
         // Take screenshot
         await page.screenshot({
