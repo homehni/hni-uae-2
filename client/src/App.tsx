@@ -21,6 +21,7 @@ import ContactPage from "@/pages/ContactPage";
 import MortgageCalculatorPage from "@/pages/MortgageCalculatorPage";
 import AreaGuidesPage from "@/pages/AreaGuidesPage";
 import ServicesPage from "@/pages/ServicesPage";
+import PropertyValuationPage from "@/pages/PropertyValuationPage";
 import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
 import TermsOfServicePage from "@/pages/TermsOfServicePage";
 import NotFound from "@/pages/not-found";
@@ -37,6 +38,7 @@ function Router() {
       <Route path="/about" component={AboutPage} />
       <Route path="/contact" component={ContactPage} />
       <Route path="/mortgage-calculator" component={MortgageCalculatorPage} />
+      <Route path="/valuation" component={PropertyValuationPage} />
       <Route path="/area-guides" component={AreaGuidesPage} />
       <Route path="/services" component={ServicesPage} />
       <Route path="/privacy" component={PrivacyPolicyPage} />

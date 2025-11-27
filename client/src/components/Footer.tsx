@@ -95,6 +95,13 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/valuation">
+                  <span className="text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-md -ml-2 cursor-pointer inline-block">
+                    Property Valuation
+                  </span>
+                </Link>
+              </li>
+              <li>
                 <Link href="/area-guides">
                   <span className="text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-md -ml-2 cursor-pointer inline-block">
                     Area Guides

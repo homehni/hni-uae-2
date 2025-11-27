@@ -21,6 +21,7 @@ import {
 import { Bed, Bath, Maximize, MapPin, Heart, Share2, Calendar, Home, MessageSquare, CheckCircle } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
 import { isInWishlist, toggleWishlist } from "@/lib/wishlist";
+import { addToRecentlyViewed } from "@/lib/recentlyViewed";
 import type { Property, Agent } from "@shared/schema";
 import { Stepper } from "@/components/reactbits/Stepper";
 import { ScrollReveal } from "@/components/reactbits/ScrollReveal";
@@ -41,6 +42,8 @@ export default function PropertyDetail() {
   useEffect(() => {
     if (propertyId) {
       setIsWishlisted(isInWishlist(propertyId));
+      // Track this property as recently viewed
+      addToRecentlyViewed(propertyId);
     }
   }, [propertyId]);
 

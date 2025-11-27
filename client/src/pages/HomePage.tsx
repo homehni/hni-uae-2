@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { HeroSearch } from "@/components/HeroSearch";
 import { PropertyCard } from "@/components/PropertyCard";
 import { NewProjectsSection } from "@/components/NewProjectsSection";
+import { RecentlyViewedSection } from "@/components/RecentlyViewedSection";
 import { Footer } from "@/components/Footer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -93,6 +94,9 @@ export default function HomePage() {
         {!loadingProjects && newProjects && newProjects.length > 0 && (
           <NewProjectsSection projects={newProjects} />
         )}
+
+        {/* Recently Viewed */}
+        <RecentlyViewedSection />
 
         {/* Popular Searches */}
         <section className="py-16 relative overflow-hidden">
