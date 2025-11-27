@@ -17,6 +17,43 @@ interface AuthSession {
 
 const sessions = new Map<string, AuthSession>();
 
+// Simple in-memory rate limiter for auth endpoints
+interface RateLimitEntry {
+  count: number;
+  resetTime: number;
+}
+const rateLimitStore = new Map<string, RateLimitEntry>();
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
+const RATE_LIMIT_MAX_REQUESTS = 10; // Max 10 attempts per window
+
+function getClientIP(req: Request): string {
+  return (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() || 
+         req.socket.remoteAddress || 
+         'unknown';
+}
+
+function rateLimitMiddleware(req: Request, res: Response, next: NextFunction) {
+  const clientIP = getClientIP(req);
+  const now = Date.now();
+  
+  const entry = rateLimitStore.get(clientIP);
+  
+  if (!entry || entry.resetTime < now) {
+    rateLimitStore.set(clientIP, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return next();
+  }
+  
+  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) {
+    const retryAfter = Math.ceil((entry.resetTime - now) / 1000);
+    res.set('Retry-After', retryAfter.toString());
+    return res.status(429).json({ error: 'Too many requests. Please try again later.', retryAfter });
+  }
+  
+  entry.count++;
+  rateLimitStore.set(clientIP, entry);
+  next();
+}
+
 function generateSessionToken(): string {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
 }
@@ -39,10 +76,10 @@ function optionalAuthMiddleware(req: Request, res: Response, next: NextFunction)
 }
 
 // ============================================
-// AUTH ROUTES
+// AUTH ROUTES (with rate limiting)
 // ============================================
 
-app.post('/api/auth/register', async (req, res) => {
+app.post('/api/auth/register', rateLimitMiddleware, async (req, res) => {
   try {
     const data = registerSchema.parse(req.body);
     const existingUser = await storage.getUserByEmail(data.email);
@@ -66,7 +103,7 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', rateLimitMiddleware, async (req, res) => {
   try {
     const data = loginSchema.parse(req.body);
     let user;
@@ -100,14 +137,16 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-app.post('/api/auth/request-otp', async (req, res) => {
+app.post('/api/auth/request-otp', rateLimitMiddleware, async (req, res) => {
   try {
     const { email, phone, type = "login" } = req.body;
     if (!email && !phone) {
       return res.status(400).json({ error: "Email or phone required" });
     }
     const otp = await storage.createOTP(email, phone, type);
-    res.json({ message: "OTP sent successfully", otp });
+    // In production, send OTP via SMS/email service
+    console.log(`[DEV] OTP for ${email || phone}: ${otp}`);
+    res.json({ message: "OTP sent successfully. Please check your email/phone." });
   } catch (error) {
     console.error("OTP request error:", error);
     res.status(500).json({ error: "Failed to send OTP" });

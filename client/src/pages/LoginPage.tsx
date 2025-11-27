@@ -20,7 +20,6 @@ export default function LoginPage() {
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [demoOtp, setDemoOtp] = useState('');
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,10 +46,9 @@ export default function LoginPage() {
     }
     setIsLoading(true);
     try {
-      const otpCode = await requestOTP(email || phone);
+      await requestOTP(email || phone);
       setOtpSent(true);
-      setDemoOtp(otpCode); // For demo purposes
-      toast({ title: 'OTP Sent', description: `OTP sent to ${email || phone}. Demo OTP: ${otpCode}` });
+      toast({ title: 'OTP Sent', description: `OTP sent to ${email || phone}. Check your email/phone.` });
     } catch (error) {
       toast({ 
         title: 'Failed to send OTP', 
@@ -190,9 +188,7 @@ export default function LoginPage() {
                           required
                         />
                       </div>
-                      {demoOtp && (
-                        <p className="text-xs text-muted-foreground">Demo OTP: {demoOtp}</p>
-                      )}
+                      <p className="text-xs text-muted-foreground">Check your email/phone for the OTP</p>
                     </div>
                     <Button type="submit" className="w-full" disabled={isLoading}>
                       {isLoading ? 'Verifying...' : 'Verify & Login'}

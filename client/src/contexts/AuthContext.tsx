@@ -118,8 +118,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw new Error(error.error || 'Failed to send OTP');
     }
 
-    const data = await response.json();
-    return data.otp; // In production, this would not be returned
+    await response.json();
+    return ''; // OTP is sent to email/phone, not returned in response
   };
 
   const register = async (data: RegisterData) => {

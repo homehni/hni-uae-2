@@ -11,6 +11,47 @@ interface AuthSession {
 
 const sessions = new Map<string, AuthSession>();
 
+// Simple in-memory rate limiter for auth endpoints
+interface RateLimitEntry {
+  count: number;
+  resetTime: number;
+}
+const rateLimitStore = new Map<string, RateLimitEntry>();
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
+const RATE_LIMIT_MAX_REQUESTS = 10; // Max 10 attempts per window
+
+function getClientIP(req: Request): string {
+  return (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() || 
+         req.socket.remoteAddress || 
+         'unknown';
+}
+
+function rateLimitMiddleware(req: Request, res: Response, next: NextFunction) {
+  const clientIP = getClientIP(req);
+  const now = Date.now();
+  
+  const entry = rateLimitStore.get(clientIP);
+  
+  if (!entry || entry.resetTime < now) {
+    // Reset or create new entry
+    rateLimitStore.set(clientIP, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return next();
+  }
+  
+  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) {
+    const retryAfter = Math.ceil((entry.resetTime - now) / 1000);
+    res.set('Retry-After', retryAfter.toString());
+    return res.status(429).json({ 
+      error: 'Too many requests. Please try again later.',
+      retryAfter 
+    });
+  }
+  
+  entry.count++;
+  rateLimitStore.set(clientIP, entry);
+  next();
+}
+
 function generateSessionToken(): string {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
 }
@@ -34,11 +75,11 @@ function optionalAuthMiddleware(req: Request, res: Response, next: NextFunction)
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // ============================================
-  // AUTH ROUTES
+  // AUTH ROUTES (with rate limiting)
   // ============================================
   
   // Register new user
-  app.post("/api/auth/register", async (req, res) => {
+  app.post("/api/auth/register", rateLimitMiddleware, async (req, res) => {
     try {
       const data = registerSchema.parse(req.body);
       
@@ -72,7 +113,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Login with email/password
-  app.post("/api/auth/login", async (req, res) => {
+  app.post("/api/auth/login", rateLimitMiddleware, async (req, res) => {
     try {
       const data = loginSchema.parse(req.body);
       
@@ -118,7 +159,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Request OTP
-  app.post("/api/auth/request-otp", async (req, res) => {
+  app.post("/api/auth/request-otp", rateLimitMiddleware, async (req, res) => {
     try {
       const { email, phone, type = "login" } = req.body;
       
@@ -128,11 +169,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const otp = await storage.createOTP(email, phone, type);
       
-      // In production, send OTP via SMS/email
-      // For demo, we'll return it (NOT FOR PRODUCTION!)
+      // In production, integrate with SMS/email service to send OTP
+      // The OTP is stored securely and will be validated on login
+      console.log(`[DEV] OTP for ${email || phone}: ${otp}`); // Dev logging only
+      
       res.json({ 
-        message: "OTP sent successfully",
-        otp // Remove this in production!
+        message: "OTP sent successfully. Please check your email/phone.",
+        // Note: In development mode, check server logs for OTP
       });
     } catch (error) {
       console.error("OTP request error:", error);
