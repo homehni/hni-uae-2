@@ -1,0 +1,20 @@
+{
+  "name": "homehni-tools",
+  "version": "1.0.0",
+  "description": "Tools for HomeHNI homepage development and testing",
+  "private": true,
+  "scripts": {
+    "start": "npx serve public -p 3000",
+    "compare": "node tools/compare-homepages.js",
+    "build": "echo \"No build step - static site in /public\""
+  },
+  "devDependencies": {
+    "pixelmatch": "^5.3.0",
+    "pngjs": "^7.0.0",
+    "puppeteer": "^21.6.1",
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
