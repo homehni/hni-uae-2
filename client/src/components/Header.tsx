@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Search, MapPin, User, Menu, Home, Users, Building2, LayoutDashboard, LogOut, Calculator, Compass, Wrench, ChevronDown } from "lucide-react";
+import { Search, MapPin, User, Menu, Home, Users, Building2, LayoutDashboard, LogOut, Calculator, Compass, Wrench, ChevronDown, BarChart3 } from "lucide-react";
 import { useState } from "react";
 import {
   Sheet,
@@ -118,6 +118,14 @@ export function Header() {
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <div className="grid gap-3 p-4 w-[400px]">
+                      <Link href="/valuation">
+                        <NavigationMenuLink className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                          <div className="text-sm font-medium leading-none">Property Valuation</div>
+                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                            Get instant property value estimates
+                          </p>
+                        </NavigationMenuLink>
+                      </Link>
                       <Link href="/area-guides">
                         <NavigationMenuLink className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
                           <div className="text-sm font-medium leading-none">Area Guides</div>
@@ -236,6 +244,12 @@ export function Header() {
                     <Button variant="ghost" className="w-full justify-start">
                       <Compass className="h-4 w-4 mr-2" />
                       Area Guides
+                    </Button>
+                  </Link>
+                  <Link href="/valuation">
+                    <Button variant="ghost" className="w-full justify-start">
+                      <BarChart3 className="h-4 w-4 mr-2" />
+                      Property Valuation
                     </Button>
                   </Link>
                   <Link href="/mortgage-calculator">
