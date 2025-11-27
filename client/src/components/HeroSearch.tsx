@@ -161,7 +161,7 @@ export function HeroSearch() {
                   Ready
                 </Button>
                 <Button
-                  variant={viewMode === "offplan" ? "default" : "outline"}
+                  variant="outline"
                   onClick={() => setViewMode("offplan")}
                   size="sm"
                   className="flex-1"

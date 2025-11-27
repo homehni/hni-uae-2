@@ -27,7 +27,7 @@ export function AgentCard({ agent }: AgentCardProps) {
         <CardContent className="p-6">
         <div className="flex items-start gap-4">
           <Avatar className="h-16 w-16">
-            <AvatarImage src={agent.photo} alt={agent.name} />
+            <AvatarImage src={agent.photo ?? undefined} alt={agent.name} />
             <AvatarFallback>{getInitials(agent.name)}</AvatarFallback>
           </Avatar>
 
@@ -47,13 +47,13 @@ export function AgentCard({ agent }: AgentCardProps) {
             </div>
 
             {/* Rating */}
-            {agent.rating > 0 && (
+            {(agent.rating ?? 0) > 0 && (
               <div className="flex items-center gap-1 mb-3">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
                     className={`h-4 w-4 ${
-                      i < agent.rating
+                      i < (agent.rating ?? 0)
                         ? "fill-primary text-primary"
                         : "text-muted-foreground"
                     }`}

@@ -1,5 +1,19 @@
-import { type Property, type InsertProperty, type Agent, type InsertAgent, type PropertyFilter } from "@shared/schema";
+import { 
+  type Property, type InsertProperty, type Agent, type InsertAgent, type PropertyFilter, PropertyStatus,
+  type User, type InsertUser, type Lead, type InsertLead, type Wallet, type Transaction,
+  type Plan, type Subscription, type Notification, type InsertNotification, type Service, type InsertService,
+  type Project, type InsertProject, type Message, type Review, type OTP,
+  UserRole, LeadStatus, LeadType, TransactionType, KYCStatus, ServiceCategory,
+  type UserRoleType, type LeadStatusType, type TransactionTypeType,
+  type DashboardStats
+} from "@shared/schema";
 import { randomUUID } from "crypto";
+import { createHash } from "crypto";
+
+// Helper function to hash passwords
+function hashPassword(password: string): string {
+  return createHash('sha256').update(password).digest('hex');
+}
 
 export interface Location {
   city: string;
@@ -11,11 +25,64 @@ export interface IStorage {
   getAllProperties(filters?: PropertyFilter): Promise<Property[]>;
   getPropertyById(id: string): Promise<Property | undefined>;
   createProperty(property: InsertProperty): Promise<Property>;
+  updateProperty(id: string, updates: Partial<InsertProperty>): Promise<Property | undefined>;
+  deleteProperty(id: string): Promise<boolean>;
   
-  // Agents
+  // Agents (backward compatibility)
   getAllAgents(): Promise<Agent[]>;
   getAgentById(id: string): Promise<Agent | undefined>;
   createAgent(agent: InsertAgent): Promise<Agent>;
+  
+  // Users
+  getAllUsers(role?: UserRoleType): Promise<User[]>;
+  getUserById(id: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  getUserByPhone(phone: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
+  updateUser(id: string, updates: Partial<InsertUser>): Promise<User | undefined>;
+  verifyPassword(user: User, password: string): Promise<boolean>;
+  
+  // OTP
+  createOTP(email: string | undefined, phone: string | undefined, type: string): Promise<string>;
+  verifyOTP(email: string | undefined, phone: string | undefined, otp: string, type: string): Promise<boolean>;
+  
+  // Wallet
+  getWalletByUserId(userId: string): Promise<Wallet | undefined>;
+  createWallet(userId: string): Promise<Wallet>;
+  updateWalletBalance(userId: string, amount: number, type: TransactionTypeType, description?: string): Promise<Transaction | undefined>;
+  getTransactionsByUserId(userId: string): Promise<Transaction[]>;
+  
+  // Leads
+  getAllLeads(filters?: { assignedTo?: string; status?: LeadStatusType; leadType?: string }): Promise<Lead[]>;
+  getLeadById(id: string): Promise<Lead | undefined>;
+  createLead(lead: InsertLead): Promise<Lead>;
+  updateLead(id: string, updates: Partial<InsertLead>): Promise<Lead | undefined>;
+  unlockLead(leadId: string, userId: string): Promise<Lead | undefined>;
+  
+  // Plans & Subscriptions
+  getAllPlans(roleType?: UserRoleType): Promise<Plan[]>;
+  getPlanById(id: string): Promise<Plan | undefined>;
+  createSubscription(userId: string, planId: string): Promise<Subscription | undefined>;
+  getActiveSubscription(userId: string): Promise<Subscription | undefined>;
+  
+  // Notifications
+  getNotificationsByUserId(userId: string): Promise<Notification[]>;
+  createNotification(notification: InsertNotification): Promise<Notification>;
+  markNotificationAsRead(id: string): Promise<boolean>;
+  
+  // Services
+  getAllServices(category?: string): Promise<Service[]>;
+  getServiceById(id: string): Promise<Service | undefined>;
+  getServicesByProviderId(providerId: string): Promise<Service[]>;
+  createService(service: InsertService): Promise<Service>;
+  
+  // Projects
+  getAllProjects(builderId?: string): Promise<Project[]>;
+  getProjectById(id: string): Promise<Project | undefined>;
+  createProject(project: InsertProject): Promise<Project>;
+  
+  // Dashboard
+  getDashboardStats(userId: string): Promise<DashboardStats>;
   
   // Locations
   getAllLocations(): Promise<Location[]>;
@@ -26,11 +93,35 @@ export class MemStorage implements IStorage {
   private properties: Map<string, Property>;
   private agents: Map<string, Agent>;
   private locations: Map<string, Location>;
+  private users: Map<string, User>;
+  private wallets: Map<string, Wallet>;
+  private transactions: Map<string, Transaction>;
+  private leads: Map<string, Lead>;
+  private plans: Map<string, Plan>;
+  private subscriptions: Map<string, Subscription>;
+  private notifications: Map<string, Notification>;
+  private services: Map<string, Service>;
+  private projects: Map<string, Project>;
+  private messages: Map<string, Message>;
+  private reviews: Map<string, Review>;
+  private otps: Map<string, OTP>;
 
   constructor() {
     this.properties = new Map();
     this.agents = new Map();
     this.locations = new Map();
+    this.users = new Map();
+    this.wallets = new Map();
+    this.transactions = new Map();
+    this.leads = new Map();
+    this.plans = new Map();
+    this.subscriptions = new Map();
+    this.notifications = new Map();
+    this.services = new Map();
+    this.projects = new Map();
+    this.messages = new Map();
+    this.reviews = new Map();
+    this.otps = new Map();
     this.initializeMockData();
   }
 
@@ -81,7 +172,14 @@ export class MemStorage implements IStorage {
 
     const createdAgents = agents.map((agent) => {
       const id = randomUUID();
-      const agentData: Agent = { ...agent, id };
+      const agentData: Agent = { 
+        ...agent, 
+        id,
+        photo: agent.photo ?? null,
+        verified: agent.verified ?? false,
+        rating: agent.rating ?? 0,
+        properties: agent.properties ?? 0,
+      };
       this.agents.set(id, agentData);
       return agentData;
     });
@@ -525,12 +623,34 @@ export class MemStorage implements IStorage {
         ...property,
         id,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        building: property.building ?? null,
+        featured: property.featured ?? false,
+        verified: property.verified ?? true,
+        completionStatus: property.completionStatus ?? null,
+        handoverDate: property.handoverDate ?? null,
+        launchPrice: property.launchPrice ?? null,
+        ownerId: null,
+        builderId: null,
+        status: PropertyStatus.LIVE,
+        rejectionReason: null,
+        furnishing: null,
+        parking: 0,
+        viewsCount: 0,
+        leadsCount: 0,
+        approvedAt: null,
+        approvedBy: null,
+        videos: null,
+        agentId: property.agentId ?? null,
       };
       this.properties.set(id, propertyData);
     });
 
     // Initialize locations after properties are created
     this.initializeLocations();
+    
+    // Initialize plans and sample users
+    this.initializePlansAndUsers();
   }
 
   // Property methods
@@ -622,6 +742,25 @@ export class MemStorage implements IStorage {
       ...insertProperty,
       id,
       createdAt: new Date(),
+      updatedAt: new Date(),
+      building: insertProperty.building ?? null,
+      featured: insertProperty.featured ?? false,
+      verified: insertProperty.verified ?? true,
+      completionStatus: insertProperty.completionStatus ?? null,
+      handoverDate: insertProperty.handoverDate ?? null,
+      launchPrice: insertProperty.launchPrice ?? null,
+      ownerId: insertProperty.ownerId ?? null,
+      builderId: insertProperty.builderId ?? null,
+      status: (insertProperty.status as typeof PropertyStatus.DRAFT) ?? PropertyStatus.DRAFT,
+      rejectionReason: insertProperty.rejectionReason ?? null,
+      furnishing: insertProperty.furnishing ?? null,
+      parking: insertProperty.parking ?? 0,
+      viewsCount: insertProperty.viewsCount ?? 0,
+      leadsCount: insertProperty.leadsCount ?? 0,
+      approvedAt: null,
+      approvedBy: insertProperty.approvedBy ?? null,
+      videos: insertProperty.videos ?? null,
+      agentId: insertProperty.agentId ?? null,
     };
     this.properties.set(id, property);
     return property;
@@ -638,9 +777,576 @@ export class MemStorage implements IStorage {
 
   async createAgent(insertAgent: InsertAgent): Promise<Agent> {
     const id = randomUUID();
-    const agent: Agent = { ...insertAgent, id };
+    const agent: Agent = { 
+      ...insertAgent, 
+      id,
+      photo: insertAgent.photo ?? null,
+      verified: insertAgent.verified ?? false,
+      rating: insertAgent.rating ?? 0,
+      properties: insertAgent.properties ?? 0,
+    };
     this.agents.set(id, agent);
     return agent;
+  }
+
+  // Property update & delete methods
+  async updateProperty(id: string, updates: Partial<InsertProperty>): Promise<Property | undefined> {
+    const property = this.properties.get(id);
+    if (!property) return undefined;
+    
+    const updatedProperty: Property = {
+      ...property,
+      ...updates,
+      updatedAt: new Date(),
+    } as Property;
+    
+    this.properties.set(id, updatedProperty);
+    return updatedProperty;
+  }
+
+  async deleteProperty(id: string): Promise<boolean> {
+    return this.properties.delete(id);
+  }
+
+  // User methods
+  async getAllUsers(role?: UserRoleType): Promise<User[]> {
+    let users = Array.from(this.users.values());
+    if (role) {
+      users = users.filter(u => u.role === role);
+    }
+    return users;
+  }
+
+  async getUserById(id: string): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(u => u.email === email);
+  }
+
+  async getUserByPhone(phone: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(u => u.phone === phone);
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const id = randomUUID();
+    const user: User = {
+      id,
+      email: insertUser.email,
+      phone: insertUser.phone ?? null,
+      password: insertUser.password ? hashPassword(insertUser.password) : null,
+      name: insertUser.name,
+      role: insertUser.role as UserRoleType,
+      photo: insertUser.photo ?? null,
+      company: insertUser.company ?? null,
+      gstNumber: insertUser.gstNumber ?? null,
+      reraNumber: insertUser.reraNumber ?? null,
+      address: insertUser.address ?? null,
+      city: insertUser.city ?? null,
+      serviceAreas: insertUser.serviceAreas ?? null,
+      isActive: insertUser.isActive ?? true,
+      isVerified: insertUser.isVerified ?? false,
+      kycStatus: (insertUser.kycStatus as typeof KYCStatus.PENDING) ?? KYCStatus.PENDING,
+      kycDocuments: insertUser.kycDocuments ?? null,
+      agencyId: insertUser.agencyId ?? null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.users.set(id, user);
+    
+    // Create wallet for the user
+    await this.createWallet(id);
+    
+    return user;
+  }
+
+  async updateUser(id: string, updates: Partial<InsertUser>): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+    
+    const updatedUser: User = {
+      ...user,
+      ...updates,
+      updatedAt: new Date(),
+    } as User;
+    
+    if (updates.password) {
+      updatedUser.password = hashPassword(updates.password);
+    }
+    
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+
+  async verifyPassword(user: User, password: string): Promise<boolean> {
+    if (!user.password) return false;
+    return user.password === hashPassword(password);
+  }
+
+  // OTP methods
+  async createOTP(email: string | undefined, phone: string | undefined, type: string): Promise<string> {
+    const id = randomUUID();
+    const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    
+    const otpRecord: OTP = {
+      id,
+      userId: null,
+      email: email ?? null,
+      phone: phone ?? null,
+      otp,
+      type,
+      expiresAt,
+      isUsed: false,
+      createdAt: new Date(),
+    };
+    
+    this.otps.set(id, otpRecord);
+    return otp;
+  }
+
+  async verifyOTP(email: string | undefined, phone: string | undefined, otp: string, type: string): Promise<boolean> {
+    const otpRecord = Array.from(this.otps.values()).find(o => 
+      (email ? o.email === email : o.phone === phone) &&
+      o.otp === otp &&
+      o.type === type &&
+      !o.isUsed &&
+      o.expiresAt > new Date()
+    );
+    
+    if (otpRecord) {
+      otpRecord.isUsed = true;
+      this.otps.set(otpRecord.id, otpRecord);
+      return true;
+    }
+    return false;
+  }
+
+  // Wallet methods
+  async getWalletByUserId(userId: string): Promise<Wallet | undefined> {
+    return Array.from(this.wallets.values()).find(w => w.userId === userId);
+  }
+
+  async createWallet(userId: string): Promise<Wallet> {
+    const id = randomUUID();
+    const wallet: Wallet = {
+      id,
+      userId,
+      balance: 0,
+      totalCreditsEarned: 0,
+      totalCreditsSpent: 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.wallets.set(id, wallet);
+    return wallet;
+  }
+
+  async updateWalletBalance(userId: string, amount: number, type: TransactionTypeType, description?: string): Promise<Transaction | undefined> {
+    const wallet = await this.getWalletByUserId(userId);
+    if (!wallet) return undefined;
+    
+    // Update wallet balance
+    wallet.balance = (wallet.balance ?? 0) + amount;
+    if (amount > 0) {
+      wallet.totalCreditsEarned = (wallet.totalCreditsEarned ?? 0) + amount;
+    } else {
+      wallet.totalCreditsSpent = (wallet.totalCreditsSpent ?? 0) + Math.abs(amount);
+    }
+    wallet.updatedAt = new Date();
+    this.wallets.set(wallet.id, wallet);
+    
+    // Create transaction
+    const transactionId = randomUUID();
+    const transaction: Transaction = {
+      id: transactionId,
+      walletId: wallet.id,
+      userId,
+      type,
+      amount,
+      description: description ?? null,
+      referenceId: null,
+      paymentId: null,
+      status: "completed",
+      createdAt: new Date(),
+    };
+    this.transactions.set(transactionId, transaction);
+    
+    return transaction;
+  }
+
+  async getTransactionsByUserId(userId: string): Promise<Transaction[]> {
+    return Array.from(this.transactions.values()).filter(t => t.userId === userId);
+  }
+
+  // Lead methods
+  async getAllLeads(filters?: { assignedTo?: string; status?: LeadStatusType; leadType?: string }): Promise<Lead[]> {
+    let leads = Array.from(this.leads.values());
+    
+    if (filters?.assignedTo) {
+      leads = leads.filter(l => l.assignedTo === filters.assignedTo);
+    }
+    if (filters?.status) {
+      leads = leads.filter(l => l.status === filters.status);
+    }
+    if (filters?.leadType) {
+      leads = leads.filter(l => l.leadType === filters.leadType);
+    }
+    
+    return leads.sort((a, b) => (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0));
+  }
+
+  async getLeadById(id: string): Promise<Lead | undefined> {
+    return this.leads.get(id);
+  }
+
+  async createLead(insertLead: InsertLead): Promise<Lead> {
+    const id = randomUUID();
+    const lead: Lead = {
+      id,
+      leadType: insertLead.leadType as typeof LeadType.PROPERTY,
+      customerName: insertLead.customerName,
+      customerEmail: insertLead.customerEmail ?? null,
+      customerPhone: insertLead.customerPhone,
+      propertyId: insertLead.propertyId ?? null,
+      serviceId: insertLead.serviceId ?? null,
+      projectId: insertLead.projectId ?? null,
+      requirement: insertLead.requirement ?? null,
+      budget: insertLead.budget ?? null,
+      preferredLocation: insertLead.preferredLocation ?? null,
+      preferredDate: insertLead.preferredDate ?? null,
+      assignedTo: insertLead.assignedTo ?? null,
+      assignedToType: insertLead.assignedToType as UserRoleType ?? null,
+      source: insertLead.source ?? "website",
+      status: (insertLead.status as LeadStatusType) ?? LeadStatus.NEW,
+      creditCost: insertLead.creditCost ?? 1,
+      isUnlocked: insertLead.isUnlocked ?? false,
+      unlockedAt: null,
+      unlockedBy: insertLead.unlockedBy ?? null,
+      notes: insertLead.notes ?? null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      contactedAt: null,
+      closedAt: null,
+    };
+    this.leads.set(id, lead);
+    
+    // Create notification for assigned user
+    if (lead.assignedTo) {
+      await this.createNotification({
+        userId: lead.assignedTo,
+        title: "New Lead Assigned",
+        message: `You have a new ${lead.leadType} lead from ${lead.customerName}`,
+        type: "lead",
+        referenceId: lead.id,
+        referenceType: "lead",
+      });
+    }
+    
+    return lead;
+  }
+
+  async updateLead(id: string, updates: Partial<InsertLead>): Promise<Lead | undefined> {
+    const lead = this.leads.get(id);
+    if (!lead) return undefined;
+    
+    const updatedLead: Lead = {
+      ...lead,
+      ...updates,
+      updatedAt: new Date(),
+    } as Lead;
+    
+    this.leads.set(id, updatedLead);
+    return updatedLead;
+  }
+
+  async unlockLead(leadId: string, userId: string): Promise<Lead | undefined> {
+    const lead = this.leads.get(leadId);
+    if (!lead) return undefined;
+    
+    // Deduct credits from wallet
+    const wallet = await this.getWalletByUserId(userId);
+    if (!wallet || (wallet.balance ?? 0) < (lead.creditCost ?? 1)) {
+      return undefined; // Insufficient balance
+    }
+    
+    await this.updateWalletBalance(userId, -(lead.creditCost ?? 1), TransactionType.LEAD_UNLOCK, `Unlocked lead ${leadId}`);
+    
+    lead.isUnlocked = true;
+    lead.unlockedAt = new Date();
+    lead.unlockedBy = userId;
+    lead.status = LeadStatus.VIEWED;
+    lead.updatedAt = new Date();
+    
+    this.leads.set(leadId, lead);
+    return lead;
+  }
+
+  // Plans & Subscriptions methods
+  async getAllPlans(roleType?: UserRoleType): Promise<Plan[]> {
+    let plans = Array.from(this.plans.values()).filter(p => p.isActive);
+    if (roleType) {
+      plans = plans.filter(p => p.roleType === roleType);
+    }
+    return plans;
+  }
+
+  async getPlanById(id: string): Promise<Plan | undefined> {
+    return this.plans.get(id);
+  }
+
+  async createSubscription(userId: string, planId: string): Promise<Subscription | undefined> {
+    const plan = this.plans.get(planId);
+    if (!plan) return undefined;
+    
+    const id = randomUUID();
+    const startDate = new Date();
+    const endDate = new Date(startDate.getTime() + (plan.durationDays * 24 * 60 * 60 * 1000));
+    
+    const subscription: Subscription = {
+      id,
+      userId,
+      planId,
+      startDate,
+      endDate,
+      status: "active",
+      paymentId: null,
+      createdAt: new Date(),
+    };
+    this.subscriptions.set(id, subscription);
+    
+    // Add credits to wallet
+    await this.updateWalletBalance(userId, plan.credits, TransactionType.SUBSCRIPTION, `Subscription: ${plan.name}`);
+    
+    return subscription;
+  }
+
+  async getActiveSubscription(userId: string): Promise<Subscription | undefined> {
+    return Array.from(this.subscriptions.values()).find(s => 
+      s.userId === userId && 
+      s.status === "active" && 
+      s.endDate > new Date()
+    );
+  }
+
+  // Notification methods
+  async getNotificationsByUserId(userId: string): Promise<Notification[]> {
+    return Array.from(this.notifications.values())
+      .filter(n => n.userId === userId)
+      .sort((a, b) => (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0));
+  }
+
+  async createNotification(notification: InsertNotification): Promise<Notification> {
+    const id = randomUUID();
+    const newNotification: Notification = {
+      id,
+      userId: notification.userId,
+      title: notification.title,
+      message: notification.message,
+      type: notification.type,
+      referenceId: notification.referenceId ?? null,
+      referenceType: notification.referenceType ?? null,
+      isRead: false,
+      createdAt: new Date(),
+    };
+    this.notifications.set(id, newNotification);
+    return newNotification;
+  }
+
+  async markNotificationAsRead(id: string): Promise<boolean> {
+    const notification = this.notifications.get(id);
+    if (!notification) return false;
+    notification.isRead = true;
+    this.notifications.set(id, notification);
+    return true;
+  }
+
+  // Service methods
+  async getAllServices(category?: string): Promise<Service[]> {
+    let services = Array.from(this.services.values()).filter(s => s.isActive);
+    if (category) {
+      services = services.filter(s => s.category === category);
+    }
+    return services;
+  }
+
+  async getServiceById(id: string): Promise<Service | undefined> {
+    return this.services.get(id);
+  }
+
+  async getServicesByProviderId(providerId: string): Promise<Service[]> {
+    return Array.from(this.services.values()).filter(s => s.providerId === providerId);
+  }
+
+  async createService(insertService: InsertService): Promise<Service> {
+    const id = randomUUID();
+    const service: Service = {
+      id,
+      providerId: insertService.providerId,
+      name: insertService.name,
+      category: insertService.category as typeof ServiceCategory.OTHER,
+      description: insertService.description,
+      serviceLocations: insertService.serviceLocations ?? null,
+      pricingType: insertService.pricingType ?? "on_inspection",
+      priceMin: insertService.priceMin ?? null,
+      priceMax: insertService.priceMax ?? null,
+      portfolioImages: insertService.portfolioImages ?? null,
+      isActive: insertService.isActive ?? true,
+      rating: insertService.rating ?? "0",
+      reviewCount: insertService.reviewCount ?? 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.services.set(id, service);
+    return service;
+  }
+
+  // Project methods
+  async getAllProjects(builderId?: string): Promise<Project[]> {
+    let projects = Array.from(this.projects.values());
+    if (builderId) {
+      projects = projects.filter(p => p.builderId === builderId);
+    }
+    return projects;
+  }
+
+  async getProjectById(id: string): Promise<Project | undefined> {
+    return this.projects.get(id);
+  }
+
+  async createProject(insertProject: InsertProject): Promise<Project> {
+    const id = randomUUID();
+    const project: Project = {
+      id,
+      builderId: insertProject.builderId,
+      name: insertProject.name,
+      description: insertProject.description,
+      location: insertProject.location,
+      city: insertProject.city,
+      reraNumber: insertProject.reraNumber ?? null,
+      status: insertProject.status ?? "upcoming",
+      completionDate: insertProject.completionDate ?? null,
+      totalUnits: insertProject.totalUnits ?? null,
+      availableUnits: insertProject.availableUnits ?? null,
+      unitTypes: insertProject.unitTypes ?? null,
+      priceRange: insertProject.priceRange ?? null,
+      images: insertProject.images ?? null,
+      videos: insertProject.videos ?? null,
+      brochureUrl: insertProject.brochureUrl ?? null,
+      amenities: insertProject.amenities ?? null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.projects.set(id, project);
+    return project;
+  }
+
+  // Dashboard stats
+  async getDashboardStats(userId: string): Promise<DashboardStats> {
+    const leads = await this.getAllLeads({ assignedTo: userId });
+    const wallet = await this.getWalletByUserId(userId);
+    const properties = Array.from(this.properties.values()).filter(
+      p => p.ownerId === userId || p.agentId === userId || p.builderId === userId
+    );
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    return {
+      activeLeads: leads.filter(l => !["closed", "lost", "completed"].includes(l.status ?? "")).length,
+      newLeadsToday: leads.filter(l => l.createdAt && l.createdAt >= today).length,
+      leadsInProgress: leads.filter(l => ["contacted", "meeting_fixed", "work_started"].includes(l.status ?? "")).length,
+      closedLeads: leads.filter(l => ["closed", "completed"].includes(l.status ?? "")).length,
+      walletBalance: wallet?.balance ?? 0,
+      totalProperties: properties.length,
+      liveProperties: properties.filter(p => p.status === "live").length,
+      totalViews: properties.reduce((sum, p) => sum + (p.viewsCount ?? 0), 0),
+    };
+  }
+
+  // Initialize mock plans and sample users
+  private initializePlansAndUsers() {
+    // Create plans
+    const plans = [
+      { name: "Agent Basic", roleType: UserRole.AGENT, durationDays: 30, credits: 10, listingsAllowed: 5, price: 999, citiesAllowed: 1, visibilityLevel: "normal" },
+      { name: "Agent Pro", roleType: UserRole.AGENT, durationDays: 90, credits: 50, listingsAllowed: 20, price: 2499, citiesAllowed: 3, visibilityLevel: "premium" },
+      { name: "Agent Enterprise", roleType: UserRole.AGENT, durationDays: 365, credits: 200, listingsAllowed: -1, price: 7999, citiesAllowed: -1, visibilityLevel: "featured" },
+      { name: "Service Starter", roleType: UserRole.SERVICE_PROVIDER, durationDays: 30, credits: 20, listingsAllowed: 3, price: 499, citiesAllowed: 1, visibilityLevel: "normal" },
+      { name: "Service Growth", roleType: UserRole.SERVICE_PROVIDER, durationDays: 90, credits: 50, listingsAllowed: 10, price: 1299, citiesAllowed: 3, visibilityLevel: "premium" },
+      { name: "Builder Basic", roleType: UserRole.BUILDER, durationDays: 30, credits: 30, listingsAllowed: 1, price: 2999, citiesAllowed: 1, visibilityLevel: "normal" },
+      { name: "Builder Plus", roleType: UserRole.BUILDER, durationDays: 90, credits: 100, listingsAllowed: 5, price: 7999, citiesAllowed: 3, visibilityLevel: "premium" },
+    ];
+
+    plans.forEach(plan => {
+      const id = randomUUID();
+      const planData: Plan = {
+        id,
+        name: plan.name,
+        roleType: plan.roleType,
+        durationDays: plan.durationDays,
+        credits: plan.credits,
+        listingsAllowed: plan.listingsAllowed,
+        citiesAllowed: plan.citiesAllowed,
+        visibilityLevel: plan.visibilityLevel,
+        price: plan.price,
+        features: null,
+        isActive: true,
+        createdAt: new Date(),
+      };
+      this.plans.set(id, planData);
+    });
+
+    // Create sample users
+    const sampleUsers = [
+      { email: "admin@homehni.com", name: "Admin User", role: UserRole.ADMIN, password: "admin123" },
+      { email: "owner@example.com", name: "Property Owner", role: UserRole.OWNER, password: "owner123" },
+      { email: "agent@example.com", name: "Real Estate Agent", role: UserRole.AGENT, password: "agent123", company: "Premium Properties" },
+      { email: "builder@example.com", name: "Construction Builder", role: UserRole.BUILDER, password: "builder123", company: "Builder Corp" },
+      { email: "agency@example.com", name: "Real Estate Agency", role: UserRole.AGENCY, password: "agency123", company: "Top Agency" },
+      { email: "provider@example.com", name: "Service Provider", role: UserRole.SERVICE_PROVIDER, password: "provider123", company: "Home Services" },
+      { email: "buyer@example.com", name: "Property Buyer", role: UserRole.BUYER, password: "buyer123" },
+    ];
+
+    sampleUsers.forEach(async (userData) => {
+      const id = randomUUID();
+      const user: User = {
+        id,
+        email: userData.email,
+        phone: null,
+        password: hashPassword(userData.password),
+        name: userData.name,
+        role: userData.role,
+        photo: null,
+        company: (userData as any).company ?? null,
+        gstNumber: null,
+        reraNumber: null,
+        address: null,
+        city: "Dubai",
+        serviceAreas: null,
+        isActive: true,
+        isVerified: true,
+        kycStatus: KYCStatus.VERIFIED,
+        kycDocuments: null,
+        agencyId: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      this.users.set(id, user);
+      
+      // Create wallet
+      const walletId = randomUUID();
+      const wallet: Wallet = {
+        id: walletId,
+        userId: id,
+        balance: 50, // Start with some credits
+        totalCreditsEarned: 50,
+        totalCreditsSpent: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      this.wallets.set(walletId, wallet);
+    });
   }
 
   // Location methods
