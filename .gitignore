@@ -4,4 +4,14 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
-tools/output/
+
+# HomeHNI prototype tools
+tools/node_modules/
+tools/output/*
+!tools/output/.gitkeep
+
+# Asset images (to be added separately)
+public/homehni/assets/*.jpg
+public/homehni/assets/*.png
+public/homehni/assets/*.svg
+!public/homehni/assets/README.txt
