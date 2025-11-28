@@ -9,6 +9,8 @@
     "build:server": "esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "build:all": "npm run build && npm run build:server",
     "start": "cross-env NODE_ENV=production node dist/index.js",
+    "start:static": "npx serve public -p 3000",
+    "compare": "node tools/compare-homepages.js",
     "check": "tsc",
     "db:push": "drizzle-kit push",
     "compare": "node tools/compare-homepages.js"
