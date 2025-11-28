@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { Request, Response, NextFunction } from 'express';
 import express from 'express';
 import { storage } from '../server/storage';
-import { propertyFilterSchema, loginSchema, registerSchema, insertLeadSchema, insertPropertySchema, type UserRoleType } from '@shared/schema';
+import { propertyFilterSchema, loginSchema, registerSchema, insertLeadSchema, insertPropertySchema, type UserRoleType } from '../shared/schema';
 
 const app = express();
 
