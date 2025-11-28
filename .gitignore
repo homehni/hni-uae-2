@@ -4,6 +4,7 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+# 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
 
 # HomeHNI prototype tools
 tools/node_modules/
@@ -15,11 +16,3 @@ public/homehni/assets/*.jpg
 public/homehni/assets/*.png
 public/homehni/assets/*.svg
 !public/homehni/assets/README.txt
-
-# Comparison tool output
-tools/output/
-
-# Asset placeholders (add real images before deploying)
-public/assets/*.jpg
-public/assets/*.png
-!public/assets/README.txt

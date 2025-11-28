@@ -1,86 +1,122 @@
-# Pull Request: Add HomeHNI Homepage Prototype
+# Pull Request: Add HomeHNI Homepage Prototype and Visual Comparison Tools
 
 ## Summary
 
-This PR adds a standalone homepage prototype for HomeHNI that replicates the layout and structure of Bayut.ae using HomeHNI branding and placeholder content.
+This PR adds a standalone HomeHNI homepage prototype that reproduces Bayut's layout and structure, along with visual comparison tools for development and testing.
 
-## Changes
+## What's Added
 
-### Added Files
+### Static Homepage (`public/homehni/`)
 
-1. **`public/index.html`** - Main homepage with:
-   - Header with logo and navigation
-   - Hero section with search form
-   - Featured listings grid (4 placeholder cards)
-   - Why HomeHNI features section
-   - Footer with company info
+- **`index.html`** - Complete homepage with:
+  - Header with navigation and action buttons
+  - Hero section with property search box
+  - Featured listings grid (6 property cards)
+  - Popular locations section
+  - Full footer with links and contact info
 
-2. **`public/styles.css`** - Responsive stylesheet with:
-   - CSS variables for brand colors
-   - Mobile-first responsive design
-   - Card hover animations
-   - Clean, modern typography
+- **`styles.css`** - Responsive styles using CSS variables:
+  - Primary: `#1E90FF`
+  - Accent: `#FF7A59`
+  - Background: `#FFFFFF`
+  - Text: `#222222`
 
-3. **`public/assets/README.txt`** - Instructions for adding placeholder images
+- **`assets/README.txt`** - Placeholder instructions for adding images
 
-4. **`tools/compare-homepages.js`** - Puppeteer-based comparison script that:
-   - Captures screenshots of Bayut and local page
-   - Creates visual diff using pixelmatch
-   - Reports pixel difference percentage
-   - Exits non-zero if difference exceeds threshold
+### Visual Comparison Tools (`tools/`)
 
-5. **`README.md`** - Documentation for local development and deployment
+- **`compare-homepages.js`** - Puppeteer script that:
+  - Captures screenshots of bayut.ae and local HomeHNI
+  - Generates a pixel-level diff image
+  - Exits non-zero if difference exceeds threshold
+  - Handles CI network restrictions gracefully
 
-6. **`PR_DESCRIPTION.md`** - This file
+- **`package.json`** - Tool dependencies and scripts:
+  - `npm start` - Serve public/ on port 3000
+  - `npm run compare` - Run visual comparison
+  - `npm run build` - No-op for static site
 
-### Modified Files
+- **`vercel.json`** - Vercel static deployment configuration
 
-- **`.gitignore`** - Added exclusions for tools/output and screenshots
-- **`vercel.json`** - Updated for static file serving
+### Documentation
 
-## How to Test
+- **`README.md`** - Complete documentation:
+  - Project structure
+  - Local development instructions
+  - Visual comparison usage
+  - Vercel deployment guide
+  - Development notes
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+- **`PR_DESCRIPTION.md`** - This file
 
-2. Start local server:
-   ```bash
-   npm start
-   ```
+### Updated `.gitignore`
 
-3. Open http://localhost:3000 in browser
-
-4. (Optional) Run comparison:
-   ```bash
-   npm run compare
-   ```
-
-## Screenshots
-
-_Run locally to capture screenshots. They will be saved to `tools/output/`._
+Added exclusions for:
+- `tools/node_modules/`
+- `tools/output/`
+- Image assets (to be added separately)
 
 ## Manual Steps Required
 
-- [ ] Add placeholder images to `public/assets/`:
-  - `placeholder-1.jpg`
-  - `placeholder-2.jpg`
-  - `placeholder-3.jpg`
-  - `placeholder-4.jpg`
-- [ ] Add HomeHNI logo (`logo.png` or `logo.svg`)
-- [ ] Confirm brand colors match design guidelines
+After merging this PR, maintainers should:
 
-## TODO Items
+1. **Add Images**:
+   - Add hero background image
+   - Add property listing images
+   - Add location images
+   - Add HomeHNI logo
+   - See `public/homehni/assets/README.txt` for full list
 
-- Replace placeholder images with real property photos
-- Update navigation links when routes are ready
-- Add favicon
-- Add Open Graph meta tags for social sharing
-- Consider adding loading states and error handling
+2. **Run Local Comparison**:
+   ```bash
+   cd tools
+   npm install
+   npm start &
+   npm run compare
+   ```
 
-## Notes
+3. **Verify Deployment**:
+   - Deploy to Vercel staging
+   - Verify all sections render correctly
+   - Test responsive breakpoints
 
-- The Bayut homepage capture may fail in CI due to network restrictions. Run the comparison script locally for full visual diff.
-- All CSS uses CSS variables for easy theming adjustments.
-- The design is responsive and works on mobile devices.
+## TODOs
+
+- [ ] Replace all placeholder images with actual assets
+- [ ] Confirm brand colors (#1E90FF, #FF7A59) with design team
+- [ ] Add HomeHNI logo (SVG preferred)
+- [ ] Review typography choices
+- [ ] Add favicon
+- [ ] Implement search functionality
+- [ ] Add property detail pages
+- [ ] Accessibility audit (WCAG 2.1)
+- [ ] Performance optimization (image compression, lazy loading)
+- [ ] SEO meta tags
+
+## CI/CD Notes
+
+⚠️ **Network Restrictions**: The visual comparison script may not be able to capture bayut.ae screenshots in CI environments due to network restrictions. This is expected behavior.
+
+To perform a full visual comparison:
+1. Clone the repository locally
+2. Run `npm install` in the `tools/` directory
+3. Start the local server: `npm start`
+4. Run comparison: `npm run compare`
+5. Review output images in `tools/output/`
+
+## Screenshots
+
+### HomeHNI Homepage Prototype
+
+![HomeHNI Homepage](https://github.com/user-attachments/assets/f6d02c7b-e482-4c0a-b080-1a5bc527cb20)
+
+## Testing Checklist
+
+- [x] HTML validates (W3C)
+- [x] CSS validates (W3C)
+- [x] Responsive on mobile
+- [x] Responsive on tablet
+- [x] Responsive on desktop
+- [ ] Cross-browser testing (Chrome, Firefox, Safari)
+- [ ] Visual comparison with Bayut.ae
+- [ ] Vercel deployment test
