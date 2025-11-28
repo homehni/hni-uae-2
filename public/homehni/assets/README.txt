@@ -1,27 +1,34 @@
-HomeHNI Assets Directory
-========================
+# HomeHNI Asset Placeholders
 
-This directory is for storing static assets for the HomeHNI homepage.
+This directory should contain the following images for the HomeHNI homepage:
 
-TODO: Add the following assets:
-- hero-bg.jpg - Hero section background image (recommended: 1920x1080)
-- logo.svg or logo.png - HomeHNI logo
-- property-1.jpg through property-6.jpg - Property listing images (recommended: 600x400)
-- location-dubai-marina.jpg - Dubai Marina location image
-- location-downtown.jpg - Downtown Dubai location image
-- location-palm.jpg - Palm Jumeirah location image
-- location-jbr.jpg - JBR location image
-- favicon.ico - Site favicon
+## Required Assets
 
-NOTE: Do not copy copyrighted images from bayut.ae or other sources.
-Use placeholder images or royalty-free stock photos.
+### Logo
+- `logo.png` - HomeHNI logo (recommended: 160x50px, PNG with transparency)
 
-Recommended image sources:
-- Unsplash (https://unsplash.com)
-- Pexels (https://www.pexels.com)
-- Pixabay (https://pixabay.com)
+### Hero Section
+- `hero-bg.png` or `hero-bg.jpg` - Hero background image (recommended: 1920x600px)
 
-Brand Colors:
+### Property Listings
+- `property-1.png` through `property-6.png` - Property listing images (recommended: 400x300px each)
+
+## Image Guidelines
+
+1. Use high-quality images optimized for web
+2. JPG for photographs, PNG for logos/graphics
+3. Compress images to reduce file size
+4. Use consistent aspect ratios for property images
+
+## Placeholder Images
+
+Currently using generated placeholder images. Replace these with:
+- Real property photos
+- Actual HomeHNI logo
+- UAE-themed hero image (skyline, properties, etc.)
+
+## Color Palette Reference
+
 - Primary: #1E90FF (Dodger Blue)
 - Accent: #FF7A59 (Coral)
 - Background: #FFFFFF (White)
