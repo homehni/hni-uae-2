@@ -10,6 +10,9 @@ tools/node_modules/
 tools/output/*
 !tools/output/.gitkeep
 
+# CI screenshot output (temp directory if ever added to repo)
+/homehni-screenshots/
+
 # Asset images (to be added separately)
 public/homehni/assets/*.jpg
 public/homehni/assets/*.png
