@@ -6,4 +6,4 @@
 tools/output
 
 # Node deps baked by vercel - ignore local node_modules (optional)
-nodemodules
+node_modules
