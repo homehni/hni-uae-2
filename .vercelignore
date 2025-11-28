@@ -1,8 +1,9 @@
-node_modules
-.local
-server
-shared
-api
-*.md
-.replit
-.jsrepo.json
+# Ignore server-side code and dev tooling for static frontend deployments
+/api
+/server
+
+# Tooling output (local)
+tools/output
+
+# Node deps baked by vercel - ignore local node_modules (optional)
+nodemodules
