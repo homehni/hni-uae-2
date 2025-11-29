@@ -14,8 +14,8 @@ const THRESHOLD_PERCENT = 1; // adjust if needed
 fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
 async function captureScreenshot(browser, url, filename) {
+  const page = await browser.newPage();
   try {
-    const page = await browser.newPage();
     await page.setViewport(VIEWPORT);
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
     const outputPath = path.join(OUTPUT_DIR, filename);
@@ -27,6 +27,8 @@ async function captureScreenshot(browser, url, filename) {
   } catch (error) {
     console.error(`❌ Failed to capture ${url}: ${error.message}`);
     throw error;
+  } finally {
+    await page.close();
   }
 }
 
@@ -45,7 +47,8 @@ async function main() {
     const img1 = PNG.sync.read(fs.readFileSync(bayutPath));
     const img2 = PNG.sync.read(fs.readFileSync(homehniPath));
 
-    const { width, height } = img1;
+    const width = Math.max(img1.width, img2.width);
+    const height = Math.max(img1.height, img2.height);
     const diff = new PNG({ width, height });
     const mismatched = pixelmatch(img1.data, img2.data, diff.data, width, height, { threshold: 0.1 });
     const total = width * height;

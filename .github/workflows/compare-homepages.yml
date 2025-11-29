@@ -1,0 +1,49 @@
+name: Compare Homepages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Puppeteer dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser
+
+      - name: Set OUTPUT_DIR for artifacts
+        run: |
+          echo "OUTPUT_DIR=/tmp/homehni-screenshots" >> $GITHUB_ENV
+
+      - name: Ensure OUTPUT_DIR exists
+        run: mkdir -p ${{ env.OUTPUT_DIR }}
+
+      - name: Run compare-homepages script
+        run: node tools/compare-homepages.js
+        continue-on-error: true
+
+      - name: Upload homepage screenshots and diff
+        uses: actions/upload-artifact@v4
+        with:
+          name: homepage-screenshots
+          path: ${{ env.OUTPUT_DIR }}
